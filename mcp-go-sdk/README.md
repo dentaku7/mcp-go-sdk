@@ -2,9 +2,15 @@
 
 A Go SDK for building Model Communication Protocol (MCP) tools and servers. This SDK provides the building blocks for implementing MCP-compliant tools that can be used with AI applications like Cursor IDE.
 
+## Installation
+
+```bash
+go get github.com/dentaku7/src/mcp-go
+```
+
 ## Quick Start
 
-Check out the example server in `servers/example` to see a minimal implementation of an MCP tool that echoes back messages:
+Here's a minimal example of creating an MCP tool that echoes back messages:
 
 ```go
 package main
@@ -74,6 +80,7 @@ func main() {
         panic(err)
     }
 }
+```
 
 ## Core Concepts
 
@@ -144,6 +151,57 @@ To use your MCP tool with Cursor IDE, create a `.cursor/mcp.json` in your projec
     }
 }
 ```
+
+## Advanced Usage
+
+### 1. Error Handling
+
+The SDK provides standard JSON-RPC error codes:
+
+```go
+const (
+    ErrParseError     = -32700 // Invalid JSON
+    ErrInvalidRequest = -32600 // Invalid Request object
+    ErrMethodNotFound = -32601 // Method not found
+    ErrInvalidParams  = -32602 // Invalid parameters
+    ErrInternal      = -32603 // Internal error
+)
+```
+
+Return errors with context:
+
+```go
+if err != nil {
+    return nil, fmt.Errorf("validation error: %w", err)
+}
+```
+
+### 2. Thread Safety
+
+When handling state in your tools, use proper synchronization:
+
+```go
+type StatefulTool struct {
+    mu    sync.RWMutex
+    state map[string]interface{}
+}
+
+func (t *StatefulTool) Execute(params json.RawMessage) (interface{}, error) {
+    t.mu.RLock()
+    defer t.mu.RUnlock()
+    // Access state safely
+}
+```
+
+### 3. Protocol Version
+
+The SDK implements MCP specification version 2024-11-05, supporting:
+
+- JSON-RPC 2.0 message format
+- Protocol version negotiation
+- Tool capability declaration
+- Proper error handling
+- Thread-safe operation
 
 ## Contributing
 
