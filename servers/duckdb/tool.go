@@ -111,19 +111,53 @@ func (t *DuckDBTool) handleQuery(query string) (interface{}, error) {
 	defer t.mu.RUnlock()
 
 	if query == "" {
-		return nil, fmt.Errorf("query cannot be empty")
+		return map[string]interface{}{
+			"content": []map[string]interface{}{
+				{
+					"type": "text",
+					"text": "Error: Query cannot be empty",
+				},
+			},
+			"metadata": map[string]interface{}{
+				"status": "error",
+				"error":  "Query cannot be empty",
+			},
+		}, nil
 	}
 
 	start := time.Now()
 	rows, err := t.db.Query(query)
 	if err != nil {
-		return nil, fmt.Errorf("query execution failed: %v", err)
+		return map[string]interface{}{
+			"content": []map[string]interface{}{
+				{
+					"type": "text",
+					"text": fmt.Sprintf("Error executing query:\n%s\n\nDuckDB Error:\n%v", query, err),
+				},
+			},
+			"metadata": map[string]interface{}{
+				"status": "error",
+				"error":  err.Error(),
+				"query":  query,
+			},
+		}, nil
 	}
 	defer rows.Close()
 
 	columns, err := rows.Columns()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get columns: %v", err)
+		return map[string]interface{}{
+			"content": []map[string]interface{}{
+				{
+					"type": "text",
+					"text": fmt.Sprintf("Error getting columns:\n%v", err),
+				},
+			},
+			"metadata": map[string]interface{}{
+				"status": "error",
+				"error":  err.Error(),
+			},
+		}, nil
 	}
 
 	var resultRows [][]interface{}
@@ -137,7 +171,18 @@ func (t *DuckDBTool) handleQuery(query string) (interface{}, error) {
 	for rows.Next() {
 		err := rows.Scan(valuePtrs...)
 		if err != nil {
-			return nil, fmt.Errorf("failed to scan row: %v", err)
+			return map[string]interface{}{
+				"content": []map[string]interface{}{
+					{
+						"type": "text",
+						"text": fmt.Sprintf("Error scanning row:\n%v", err),
+					},
+				},
+				"metadata": map[string]interface{}{
+					"status": "error",
+					"error":  err.Error(),
+				},
+			}, nil
 		}
 
 		row := make([]interface{}, len(columns))
@@ -145,6 +190,21 @@ func (t *DuckDBTool) handleQuery(query string) (interface{}, error) {
 			row[i] = v
 		}
 		resultRows = append(resultRows, row)
+	}
+
+	if err := rows.Err(); err != nil {
+		return map[string]interface{}{
+			"content": []map[string]interface{}{
+				{
+					"type": "text",
+					"text": fmt.Sprintf("Error during row iteration:\n%v", err),
+				},
+			},
+			"metadata": map[string]interface{}{
+				"status": "error",
+				"error":  err.Error(),
+			},
+		}, nil
 	}
 
 	duration := time.Since(start)
@@ -192,6 +252,7 @@ func (t *DuckDBTool) handleQuery(query string) (interface{}, error) {
 			"duration": duration.Seconds(),
 			"rowCount": len(resultRows),
 			"status":   "success",
+			"query":    query,
 		},
 	}, nil
 }
