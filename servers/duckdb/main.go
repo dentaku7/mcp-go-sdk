@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"strings"
 
 	"mcp-go-sdk/server"
 	"mcp-go-sdk/transport"
@@ -23,6 +24,15 @@ func main() {
 	tool := NewDuckDBTool(dbPath)
 	defer tool.Close()
 
+	// Get DuckDB version
+	version, err := tool.GetVersion()
+	if err != nil {
+		log.Printf("Warning: Could not get DuckDB version: %v", err)
+		version = "unknown"
+	}
+	// Clean up version string
+	version = strings.TrimPrefix(version, "v")
+
 	// Create server with stdio transport
 	srv := server.NewServer(transport.NewStdioTransport())
 
@@ -32,7 +42,7 @@ func main() {
 	}
 
 	// Start the server
-	log.Printf("Starting DuckDB MCP server with database: %s", dbPath)
+	log.Printf("Starting DuckDB MCP server (DuckDB v%s) with database: %s", version, dbPath)
 	if err := srv.Start(); err != nil {
 		log.Fatalf("Server error: %v", err)
 	}

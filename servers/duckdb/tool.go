@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	_ "github.com/marcboeker/go-duckdb"
+	_ "github.com/marcboeker/go-duckdb/v2"
 )
 
 // DuckDBTool implements the MCP tool interface for DuckDB
@@ -297,4 +297,18 @@ func (t *DuckDBTool) Close() error {
 		t.db = nil
 	}
 	return nil
+}
+
+// GetVersion returns the DuckDB version
+func (t *DuckDBTool) GetVersion() (string, error) {
+	if err := t.ensureConnection(); err != nil {
+		return "", err
+	}
+
+	var version string
+	err := t.db.QueryRow("SELECT version();").Scan(&version)
+	if err != nil {
+		return "", fmt.Errorf("failed to get DuckDB version: %v", err)
+	}
+	return version, nil
 }

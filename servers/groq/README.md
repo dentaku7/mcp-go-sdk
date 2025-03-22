@@ -31,7 +31,7 @@ The tool accepts the following command-line arguments:
 Run the tool directly:
 
 ```bash
-groq -api-key "your-groq-api-key"
+mcp-groq -api-key "your-groq-api-key"
 ```
 
 ### As an MCP Tool
@@ -44,7 +44,7 @@ The tool implements the MCP protocol and can be integrated with Cursor IDE. To s
 {
     "mcpServers": {
         "groq": {
-            "command": "groq",
+            "command": "mcp-groq",
             "args": ["-api-key", "your-groq-api-key"],
             "env": {}
         }

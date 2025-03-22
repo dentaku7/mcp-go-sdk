@@ -75,8 +75,8 @@ func (t *GroqTool) Name() string {
 
 // Description returns a description of the tool
 func (t *GroqTool) Description() string {
-	return `Ask Groq is your trusted companion for gaining additional perspectives and validating your thinking process. 
-Think of it as having a knowledgeable colleague who can provide valuable second opinions and alternative viewpoints.
+	return `Ask Groq is your trusted companion for gaining additional perspectives and validating your thinking process, powered by a model with a 128K token context window. 
+This means it can process and analyze large amounts of context - entire codebases, long SQL queries, or detailed documentation.
 
 Use this tool when you want to:
 1. Validate your proposed solutions before presenting them
@@ -87,35 +87,37 @@ Use this tool when you want to:
 
 Parameters:
 - question: What you'd like a second opinion on (required)
-- context: Context to help to understand the question better (required). Use this to provide:
-  * Background information about the topic
-  * Code snippets or documentation
-  * Previous conversation history
-  * Current state or environment details
-  * Any relevant information that helps frame the question
+- context: FULL context to help understand the question better (required). The model has a large 128K token context window, so don't hesitate to provide:
+  * COMPLETE code snippets, not just fragments
+  * ENTIRE SQL queries with schema definitions
+  * FULL error messages and stack traces
+  * ALL relevant documentation
+  * COMPLETE conversation history
+  * DETAILED system state or environment details
+  * ANY and ALL information that could be relevant
 
 Example usage:
-1. Basic question with minimal context:
+1. SQL Query Review:
    {
-     "question": "What is the best way to implement rate limiting?",
-     "context": "We're building a REST API in Go."
+     "question": "Can this query be optimized?",
+     "context": "FULL table schemas:\n[complete CREATE TABLE statements]\n\nCurrent query:\n[entire SQL query]\n\nExisting indexes:\n[all index definitions]\n\nTypical data volumes:\n[table sizes and growth patterns]"
    }
 
-2. With code context:
+2. Code Review:
    {
-     "question": "What improvements can we make?",
-     "context": "Here's our current rate limiting implementation: [code snippet]"
+     "question": "What improvements can we make to this implementation?",
+     "context": "Project structure:\n[directory tree]\n\nRelevant files:\n[complete file contents, not just snippets]\n\nDependencies:\n[full package.json/go.mod]\n\nCurrent implementation:\n[entire implementation including imports and related files]"
    }
 
-3. With detailed context:
+3. Architecture Review:
    {
-     "question": "What should we refactor first?",
-     "context": "Our codebase uses MongoDB, Express, and React. Here are the key files and their current issues: [files and descriptions]"
+     "question": "Is this the right approach?",
+     "context": "Current architecture:\n[complete system diagram]\n\nRequirements:\n[full requirements doc]\n\nConstraints:\n[all technical and business constraints]\n\nExisting components:\n[detailed description of all related systems]"
    }
 
-Remember: While I can help you think through problems and provide alternative perspectives, 
-I'm here to complement your thinking, not replace it. Use me as a sounding board to strengthen 
-your own analysis and decision-making process.`
+Remember: This model can handle extensive context (128K tokens), so don't summarize or truncate your context. 
+The more complete information you provide, the more accurate and helpful the response will be. 
+Include full code, complete queries, entire error messages, and comprehensive documentation whenever possible.`
 }
 
 // Schema returns the JSON schema for the tool's parameters
@@ -181,7 +183,7 @@ func (t *GroqTool) Execute(params json.RawMessage) (interface{}, error) {
 	messages := []openai.ChatCompletionMessageParamUnion{
 		openai.ChatCompletionMessage{
 			Role:    "system",
-			Content: "You are a helpful expert assistant who provides clear, practical, and well-reasoned answers. You excel at understanding context and providing targeted responses.",
+			Content: "You are a helpful expert assistant who provides clear, practical, and well-reasoned answers. You excel at understanding context and providing targeted responses. If you feel the provided context is insufficient to give a complete and accurate answer, don't hesitate to ask for specific additional information that would help you provide a better response.",
 		},
 		openai.ChatCompletionMessage{
 			Role:    "user",
