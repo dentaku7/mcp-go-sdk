@@ -18,18 +18,29 @@ A Go-based MCP tool that leverages the Groq API to provide intelligent responses
 
 ## Configuration
 
-The tool accepts the following command-line arguments:
+The tool can be configured using either environment variables or command-line arguments:
 
-- `-api-key`: Groq API key (required)
+### Environment Variables
+
+- `GROQ_API_KEY`: Groq API key (required if not provided via command line)
+
+### Command-line Arguments
+
+- `-api-key`: Groq API key (required if not set via GROQ_API_KEY)
 - `-model`: Model to use for completions (default: "deepseek-r1-distill-llama-70b")
-- `-temperature`: Temperature for response generation (0.0-1.0) (default: 0.6)
+- `-temperature`: Temperature for response generation (0.0-1.5) (default: 0.6)
 
 ## Usage
 
 ### As a Command Line Tool
 
-Run the tool directly:
+Run the tool using environment variable:
+```bash
+export GROQ_API_KEY="your-groq-api-key"
+mcp-groq
+```
 
+Or using command-line argument:
 ```bash
 mcp-groq -api-key "your-groq-api-key"
 ```
@@ -45,8 +56,10 @@ The tool implements the MCP protocol and can be integrated with Cursor IDE. To s
     "mcpServers": {
         "groq": {
             "command": "mcp-groq",
-            "args": ["-api-key", "your-groq-api-key"],
-            "env": {}
+            "args": [],
+            "env": {
+                "GROQ_API_KEY": "your-groq-api-key"
+            }
         }
     }
 }
@@ -58,12 +71,9 @@ Run the tests:
 
 ```bash
 # Run all tests
-go test ./...
+GROQ_API_KEY=gsk_*** go test ./...
 
 # Run tests with verbose output
-go test -v ./...
-
-# Run tests with a real API key
 GROQ_API_KEY=gsk_*** go test -v ./...
 ```
 

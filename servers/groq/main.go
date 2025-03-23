@@ -17,14 +17,18 @@ const (
 
 func main() {
 	var config Config
-	flag.StringVar(&config.APIKey, "api-key", "", "Groq API key")
+
+	// Check environment variable first
+	config.APIKey = os.Getenv("GROQ_API_KEY")
+
+	// Define flags
+	flag.StringVar(&config.APIKey, "api-key", config.APIKey, "Groq API key (can also be set via GROQ_API_KEY environment variable)")
 	flag.StringVar(&config.Model, "model", "deepseek-r1-distill-llama-70b", "Model to use for completions")
 	flag.Float64Var(&config.Temperature, "temperature", 0.6, "Temperature for response generation (0.0-1.5)")
 
 	// Set up custom flag usage
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s [options]\n\n", os.Args[0])
-		fmt.Fprintf(os.Stderr, "Options:\n")
+		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
 		flag.PrintDefaults()
 	}
 
@@ -32,7 +36,7 @@ func main() {
 
 	// Validate required flags
 	if config.APIKey == "" {
-		log.Fatal("Error: -api-key is required")
+		log.Fatal("Error: API key is required. Set it via -api-key flag or GROQ_API_KEY environment variable")
 	}
 
 	// Validate temperature range
