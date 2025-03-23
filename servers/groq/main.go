@@ -16,12 +16,10 @@ const (
 )
 
 func main() {
-	// Define flags
-	var (
-		apiKey      string
-		model       string
-		temperature float64
-	)
+	var config Config
+	flag.StringVar(&config.APIKey, "api-key", "", "Groq API key")
+	flag.StringVar(&config.Model, "model", "deepseek-r1-distill-llama-70b", "Model to use for completions")
+	flag.Float64Var(&config.Temperature, "temperature", 0.6, "Temperature for response generation (0.0-1.5)")
 
 	// Set up custom flag usage
 	flag.Usage = func() {
@@ -30,31 +28,23 @@ func main() {
 		flag.PrintDefaults()
 	}
 
-	// Define flags with descriptions
-	flag.StringVar(&apiKey, "api-key", "", "Groq API key (required)")
-	flag.StringVar(&model, "model", defaultModel, "Model to use for completions")
-	flag.Float64Var(&temperature, "temperature", defaultTemperature, "Temperature for response generation (0.0-1.0)")
 	flag.Parse()
 
 	// Validate required flags
-	if apiKey == "" {
+	if config.APIKey == "" {
 		log.Fatal("Error: -api-key is required")
 	}
 
 	// Validate temperature range
-	if temperature < 0 || temperature > 1 {
-		log.Fatal("Error: temperature must be between 0 and 1")
+	if config.Temperature < 0 || config.Temperature > 1.5 {
+		log.Fatal("Error: temperature must be between 0 and 1.5")
 	}
 
 	// Create a new MCP server with stdio transport
 	srv := server.NewServer(transport.NewStdioTransport())
 
 	// Create and register the Groq tool
-	tool := NewGroqTool(Config{
-		Model:       model,
-		Temperature: temperature,
-		APIKey:      apiKey,
-	})
+	tool := NewGroqTool(config)
 	if err := srv.RegisterTool(tool); err != nil {
 		log.Fatalf("Failed to register tool: %v", err)
 	}
