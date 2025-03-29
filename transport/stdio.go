@@ -3,7 +3,7 @@ package transport
 import (
 	"os"
 
-	"mcp-go-sdk"
+	"github.com/dentaku7/mcp-go-sdk"
 )
 
 // StdioTransport implements Transport using stdin/stdout

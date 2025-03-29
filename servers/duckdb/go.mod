@@ -6,7 +6,7 @@ toolchain go1.24.0
 
 require (
 	github.com/marcboeker/go-duckdb/v2 v2.0.3
-	mcp-go-sdk v0.0.0
+	github.com/dentaku7/mcp-go-sdk v0.0.0
 )
 
 require (
@@ -35,4 +35,4 @@ require (
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 )
 
-replace mcp-go-sdk => ../../mcp-go-sdk
+replace github.com/dentaku7/mcp-go-sdk => ../..

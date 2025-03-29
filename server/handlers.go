@@ -2,7 +2,7 @@ package server
 
 import (
 	"encoding/json"
-	"mcp-go-sdk"
+	"github.com/dentaku7/mcp-go-sdk"
 )
 
 // handleInitialize processes the initialize request

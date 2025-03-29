@@ -9,7 +9,7 @@ import (
 	"sync"
 	"syscall"
 
-	"mcp-go-sdk"
+	"github.com/dentaku7/mcp-go-sdk"
 )
 
 // Server defines the interface for an MCP server

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"io"
 
-	"mcp-go-sdk"
+	"github.com/dentaku7/mcp-go-sdk"
 )
 
 // BaseTransport provides common functionality for transports
