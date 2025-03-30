@@ -1,0 +1,28 @@
+{
+	"type": "object",
+	"properties": {
+		"relations": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"from": {
+						"type": "string",
+						"description": "The name of the entity where the relation starts"
+					},
+					"to": {
+						"type": "string",
+						"description": "The name of the entity where the relation ends"
+					},
+					"relationType": {
+						"type": "string",
+						"description": "The type of the relation"
+					}
+				},
+				"required": ["from", "to", "relationType"]
+			},
+			"description": "An array of relations to delete"
+		}
+	},
+	"required": ["relations"]
+}

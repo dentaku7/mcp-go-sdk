@@ -1,0 +1,29 @@
+{
+	"type": "object",
+	"properties": {
+		"filter": {
+			"type": "object",
+			"description": "Criteria to filter entities for bulk update.",
+			"properties": {
+				"type": {"type": "string", "description": "Filter entities by type (exact match)."},
+				"name_contains": {"type": "string", "description": "Filter entities whose name contains this substring (case-sensitive)."},
+				"description_contains": {"type": "string", "description": "Filter entities whose description contains this substring (case-sensitive)."}
+			},
+			"additionalProperties": false,
+			"minProperties": 1,
+			"required": [] 
+		},
+		"updates": {
+			"type": "object",
+			"description": "Metadata updates to apply (keys are dot-paths, values are data)."
+		},
+		"operation": {
+			"type": "string",
+			"description": "Operation: 'merge' (default), 'replace', 'delete'.",
+			"enum": ["merge", "replace", "delete"],
+			"default": "merge"
+		}
+	},
+	"required": ["filter", "updates"],
+	"additionalProperties": false
+}

@@ -1,11 +1,15 @@
 package tool
 
 import (
+	_ "embed" // Required for go:embed directive
 	"encoding/json"
 	"fmt"
 
 	"mcp-memory/internal/types"
 )
+
+//go:embed schemas/open_nodes.json
+var openNodesSchemaJSON []byte // Use []byte for json.RawMessage
 
 // GraphManager defines the interface for graph operations
 type GraphManager interface {
@@ -36,18 +40,7 @@ func (t *OpenNodesTool) Description() string {
 
 // Schema returns the JSON schema for the tool's parameters
 func (t *OpenNodesTool) Schema() json.RawMessage {
-	return json.RawMessage(`{
-		"type": "object",
-		"properties": {
-			"node_ids": {
-				"type": "array",
-				"items": {
-					"type": "string"
-				}
-			}
-		},
-		"required": ["node_ids"]
-	}`)
+	return openNodesSchemaJSON
 }
 
 type OpenNodesInput struct {

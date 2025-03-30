@@ -1,0 +1,37 @@
+{
+	"type": "object",
+	"properties": {
+		"entities": {
+			"type": "array",
+			"description": "An array of entity objects to partially update.",
+			"items": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "The unique identifier of the entity to update."
+					},
+					"type": {
+						"type": "string",
+						"description": "Optional. The new type of the entity."
+					},
+					"name": {
+						"type": "string",
+						"description": "Optional. The new name of the entity."
+					},
+					"description": {
+						"type": "string",
+						"description": "Optional. The new description of the entity. Provide empty string to clear."
+					},
+					"metadata": {
+						"type": "object",
+						"description": "Optional. Metadata fields to merge into the entity's existing metadata.",
+						"additionalProperties": true
+					}
+				},
+				"required": ["id"]
+			}
+		}
+	},
+	"required": ["entities"]
+}

@@ -1,5 +1,7 @@
 package types
 
+import "time"
+
 // Entity represents a node in the knowledge graph
 type Entity struct {
 	ID          string                 `json:"id"`
@@ -11,12 +13,14 @@ type Entity struct {
 
 // Relation represents a connection between two entities
 type Relation struct {
-	ID          string                 `json:"id"`
-	Type        string                 `json:"type"`
-	Source      string                 `json:"source"`
-	Target      string                 `json:"target"`
-	Description string                 `json:"description,omitempty"`
-	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+	ID            string                 `json:"id"`
+	Type          string                 `json:"type"`
+	Source        string                 `json:"source"`
+	Target        string                 `json:"target"`
+	Description   string                 `json:"description,omitempty"`
+	Metadata      map[string]interface{} `json:"metadata,omitempty"`
+	Weight        float64                `json:"weight,omitempty"`
+	Bidirectional bool                   `json:"bidirectional,omitempty"`
 }
 
 // Observation represents a piece of information about an entity
@@ -27,6 +31,8 @@ type Observation struct {
 	Content     string                 `json:"content"`
 	Description string                 `json:"description,omitempty"`
 	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+	Timestamp   time.Time              `json:"timestamp"`
+	Tags        []string               `json:"tags,omitempty"`
 }
 
 // KnowledgeGraph represents the in-memory graph structure
@@ -40,4 +46,12 @@ type KnowledgeGraph struct {
 type KnowledgeGraphResult struct {
 	Entities  map[string]Entity   `json:"entities"`
 	Relations map[string]Relation `json:"relations"`
+}
+
+// EntityFilterCriteria defines criteria for filtering entities
+type EntityFilterCriteria struct {
+	Type                string `json:"type,omitempty"`
+	NameContains        string `json:"name_contains,omitempty"`
+	DescriptionContains string `json:"description_contains,omitempty"`
+	// TODO: Add metadata filters? (e.g., MetadataHasKey, MetadataEquals)
 }

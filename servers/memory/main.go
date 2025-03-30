@@ -106,6 +106,14 @@ func main() {
 		tool.NewReadGraphTool(manager),
 		tool.NewSearchNodesTool(manager),
 		tool.NewOpenNodesTool(manager),
+		tool.NewUpdateEntityMetadataTool(manager),
+		tool.NewBulkUpdateMetadataTool(manager),
+		tool.NewUpdateEntitiesTool(manager),
+		tool.NewGetEntityTimelineTool(manager),
+		tool.NewQueryTool(manager),
+		tool.NewTraverseGraphTool(manager),
+		tool.NewGetSubgraphTool(manager),
+		tool.NewFindPathsTool(manager),
 	}
 
 	for _, t := range tools {

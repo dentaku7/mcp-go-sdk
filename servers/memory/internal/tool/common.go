@@ -1,5 +1,11 @@
 package tool
 
+// ContextKey defines a type for context keys to avoid collisions.
+type ContextKey string
+
+// GraphManagerKey is the key used to store the KnowledgeGraphManager in the runtime context.
+const GraphManagerKey ContextKey = "graphManager"
+
 // formatResponse formats a successful response in the MCP tool format
 func formatResponse(message string, metadata map[string]interface{}, data interface{}) interface{} {
 	response := map[string]interface{}{

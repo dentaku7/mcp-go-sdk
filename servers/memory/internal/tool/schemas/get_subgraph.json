@@ -1,0 +1,73 @@
+{
+	"type": "object",
+	"properties": {
+		"start_node_ids": {
+			"type": "array",
+			"description": "List of entity IDs to define the center of the subgraph.",
+			"items": {
+				"type": "string"
+			}
+		},
+		"radius": {
+			"type": "integer",
+			"description": "Maximum distance (hops) from the start nodes to include. Radius 0 includes only the start nodes and relations between them.",
+			"minimum": 0
+		},
+		"filters": {
+			"type": "object",
+			"description": "Optional filters to apply during subgraph extraction.",
+			"properties": {
+				"node_filter": {
+					"$ref": "#/$defs/NodeFilter"
+				},
+				"relation_filter": {
+					"$ref": "#/$defs/RelationFilter"
+				}
+			}
+		}
+	},
+	"required": [
+		"start_node_ids",
+		"radius"
+	],
+	"$defs": {
+		"FilterCondition": {
+			"type": "object",
+			"properties": {
+				"property": {
+					"type": "string",
+					"description": "Node/Relation property to filter on (e.g., 'type', 'name', 'metadata.key')."
+				},
+				"value": {
+					"description": "Value to match."
+				}
+			},
+			"required": [
+				"property",
+				"value"
+			]
+		},
+		"NodeFilter": {
+			"type": "object",
+			"properties": {
+				"conditions": {
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/FilterCondition"
+					}
+				}
+			}
+		},
+		"RelationFilter": {
+			"type": "object",
+			"properties": {
+				"conditions": {
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/FilterCondition"
+					}
+				}
+			}
+		}
+	}
+} 

@@ -1,0 +1,21 @@
+{
+	"type": "object",
+	"properties": {
+		"entity_id": {
+			"type": "string",
+			"description": "ID of the single entity to update."
+		},
+		"updates": {
+			"type": "object",
+			"description": "Metadata updates to apply (keys are dot-paths, values are data)."
+		},
+		"operation": {
+			"type": "string",
+			"description": "Operation: 'merge' (default), 'replace', 'delete'.",
+			"enum": ["merge", "replace", "delete"],
+			"default": "merge"
+		}
+	},
+	"required": ["entity_id", "updates"],
+	"additionalProperties": false
+}

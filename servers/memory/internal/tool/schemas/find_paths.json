@@ -1,0 +1,74 @@
+{
+	"type": "object",
+	"properties": {
+		"start_node_id": {
+			"type": "string",
+			"description": "The ID of the entity to start the path search from."
+		},
+		"end_node_id": {
+			"type": "string",
+			"description": "The ID of the entity to find paths to."
+		},
+		"max_length": {
+			"type": "integer",
+			"description": "Maximum path length in terms of the number of relations (-1 for unlimited).",
+			"default": -1
+		},
+		"filters": {
+			"type": "object",
+			"description": "Optional filters to apply to nodes and relations along the path.",
+			"properties": {
+				"node_filter": {
+					"$ref": "#/$defs/NodeFilter"
+				},
+				"relation_filter": {
+					"$ref": "#/$defs/RelationFilter"
+				}
+			}
+		}
+	},
+	"required": [
+		"start_node_id",
+		"end_node_id"
+	],
+	"$defs": {
+		"FilterCondition": {
+			"type": "object",
+			"properties": {
+				"property": {
+					"type": "string",
+					"description": "Node/Relation property to filter on (e.g., 'type', 'name', 'metadata.key')."
+				},
+				"value": {
+					"description": "Value to match."
+				}
+			},
+			"required": [
+				"property",
+				"value"
+			]
+		},
+		"NodeFilter": {
+			"type": "object",
+			"properties": {
+				"conditions": {
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/FilterCondition"
+					}
+				}
+			}
+		},
+		"RelationFilter": {
+			"type": "object",
+			"properties": {
+				"conditions": {
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/FilterCondition"
+					}
+				}
+			}
+		}
+	}
+} 

@@ -1,12 +1,16 @@
 package tool
 
 import (
+	_ "embed" // Required for go:embed directive
 	"encoding/json"
 	"fmt"
 
 	"mcp-go-sdk"
 	"mcp-memory/internal/graph"
 )
+
+//go:embed schemas/delete_observations.json
+var deleteObservationsSchemaJSON []byte // Use []byte for json.RawMessage
 
 // DeleteObservationsTool implements the Tool interface for deleting observations
 type DeleteObservationsTool struct {
@@ -32,18 +36,7 @@ func (t *DeleteObservationsTool) Description() string {
 
 // Schema returns the JSON schema for the tool's parameters
 func (t *DeleteObservationsTool) Schema() json.RawMessage {
-	return json.RawMessage(`{
-		"type": "object",
-		"properties": {
-			"ids": {
-				"type": "array",
-				"items": {
-					"type": "string"
-				}
-			}
-		},
-		"required": ["ids"]
-	}`)
+	return deleteObservationsSchemaJSON
 }
 
 // Execute deletes observations from the knowledge graph
