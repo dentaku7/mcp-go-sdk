@@ -1,0 +1,37 @@
+{
+	"type": "object",
+	"properties": {
+		"entities": {
+			"description": "List of entities to create",
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "Optional. A unique identifier for the entity. If not provided, one will be generated."
+					},
+					"type": {
+						"type": "string",
+						"description": "The type of the entity"
+					},
+					"name": {
+						"type": "string",
+						"description": "The name of the entity"
+					},
+					"description": {
+						"type": "string",
+						"description": "Optional. A description of the entity"
+					},
+					"metadata": {
+						"type": "object",
+						"description": "Optional. Additional metadata for the entity",
+						"additionalProperties": true
+					}
+				},
+				"required": ["type", "name"]
+			}
+		}
+	},
+	"required": ["entities"]
+}

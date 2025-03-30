@@ -1,0 +1,50 @@
+{
+	"type": "object",
+	"properties": {
+		"target_type": {
+			"type": "string",
+			"description": "The type of item to query: 'entity' or 'relation'.",
+			"enum": ["entity", "relation"]
+		},
+		"filters": {
+			"type": "array",
+			"description": "Optional list of filters to apply.",
+			"items": {
+				"type": "object",
+				"properties": {
+					"field": {
+						"type": "string",
+						"description": "The field to filter on (e.g., 'id', 'type', 'metadata.key')."
+					},
+					"operator": {
+						"type": "string",
+						"description": "The comparison operator.",
+						"enum": ["eq", "neq", "in", "nin", "contains", "gt", "gte", "lt", "lte"]
+					},
+					"value": {
+						"description": "The value to compare against. Should be an array for 'in'/'nin' operators."
+					}
+				},
+				"required": ["field", "operator", "value"]
+			}
+		},
+		"sort_by": {
+			"type": "string",
+			"description": "Optional field to sort the results by (e.g., 'id', 'metadata.name')."
+		},
+		"sort_order": {
+			"type": "string",
+			"description": "Optional sort order: 'asc' (ascending) or 'desc' (descending). Defaults to asc.",
+			"enum": ["asc", "desc"]
+		},
+		"limit": {
+			"type": "integer",
+			"description": "Optional maximum number of results to return."
+		},
+		"offset": {
+			"type": "integer",
+			"description": "Optional number of results to skip."
+		}
+	},
+	"required": ["target_type"]
+}

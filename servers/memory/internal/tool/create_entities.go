@@ -1,6 +1,7 @@
 package tool
 
 import (
+	_ "embed" // Required for go:embed directive
 	"encoding/json"
 	"fmt"
 
@@ -8,6 +9,9 @@ import (
 	"mcp-memory/internal/graph"
 	"mcp-memory/internal/types"
 )
+
+//go:embed schemas/create_entities.json
+var createEntitiesSchemaJSON []byte // Use []byte for json.RawMessage
 
 // CreateEntitiesTool implements the Tool interface for creating entities
 type CreateEntitiesTool struct {
@@ -28,47 +32,12 @@ func (t *CreateEntitiesTool) Name() string {
 
 // Description returns the description of the tool
 func (t *CreateEntitiesTool) Description() string {
-	return "Creates new entities in the knowledge graph"
+	return `Creates new entities in the knowledge graph.`
 }
 
 // Schema returns the JSON schema for the tool's parameters
 func (t *CreateEntitiesTool) Schema() json.RawMessage {
-	return json.RawMessage(`{
-		"type": "object",
-		"properties": {
-			"entities": {
-				"type": "array",
-				"items": {
-					"type": "object",
-					"properties": {
-						"id": {
-							"type": "string",
-							"description": "Optional. A unique identifier for the entity. If not provided, one will be generated."
-						},
-						"type": {
-							"type": "string",
-							"description": "The type of the entity"
-						},
-						"name": {
-							"type": "string",
-							"description": "The name of the entity"
-						},
-						"description": {
-							"type": "string",
-							"description": "Optional. A description of the entity"
-						},
-						"metadata": {
-							"type": "object",
-							"description": "Optional. Additional metadata for the entity",
-							"additionalProperties": true
-						}
-					},
-					"required": ["type", "name"]
-				}
-			}
-		},
-		"required": ["entities"]
-	}`)
+	return createEntitiesSchemaJSON
 }
 
 // Execute creates new entities in the knowledge graph

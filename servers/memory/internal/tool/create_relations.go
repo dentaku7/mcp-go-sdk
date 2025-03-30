@@ -1,6 +1,7 @@
 package tool
 
 import (
+	_ "embed" // Required for go:embed directive
 	"encoding/json"
 	"fmt"
 
@@ -8,6 +9,9 @@ import (
 	"mcp-memory/internal/graph"
 	"mcp-memory/internal/types"
 )
+
+//go:embed schemas/create_relations.json
+var createRelationsSchemaJSON []byte // Use []byte for json.RawMessage
 
 // CreateRelationsTool implements the Tool interface for creating relations
 type CreateRelationsTool struct {
@@ -33,46 +37,7 @@ func (t *CreateRelationsTool) Description() string {
 
 // Schema returns the JSON schema for the tool's parameters
 func (t *CreateRelationsTool) Schema() json.RawMessage {
-	return json.RawMessage(`{
-		"type": "object",
-		"properties": {
-			"relations": {
-				"type": "array",
-				"items": {
-					"type": "object",
-					"properties": {
-						"id": {
-							"type": "string",
-							"description": "Optional. A unique identifier for the relation. If not provided, one will be generated."
-						},
-						"type": {
-							"type": "string",
-							"description": "The type of the relation"
-						},
-						"source": {
-							"type": "string",
-							"description": "The ID of the source entity"
-						},
-						"target": {
-							"type": "string",
-							"description": "The ID of the target entity"
-						},
-						"description": {
-							"type": "string",
-							"description": "Optional. A description of the relation"
-						},
-						"metadata": {
-							"type": "object",
-							"description": "Optional. Additional metadata for the relation",
-							"additionalProperties": true
-						}
-					},
-					"required": ["type", "source", "target"]
-				}
-			}
-		},
-		"required": ["relations"]
-	}`)
+	return createRelationsSchemaJSON
 }
 
 // Execute creates new relations in the knowledge graph

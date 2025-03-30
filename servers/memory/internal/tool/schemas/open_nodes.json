@@ -1,0 +1,12 @@
+{
+	"type": "object",
+	"properties": {
+		"node_ids": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		}
+	},
+	"required": ["node_ids"]
+}

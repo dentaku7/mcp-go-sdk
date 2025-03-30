@@ -1,12 +1,16 @@
 package tool
 
 import (
+	_ "embed" // Required for go:embed directive
 	"encoding/json"
 	"fmt"
 
 	"mcp-go-sdk"
 	"mcp-memory/internal/graph"
 )
+
+//go:embed schemas/delete_entities.json
+var deleteEntitiesSchemaJSON []byte // Use []byte for json.RawMessage
 
 // DeleteEntitiesTool implements the Tool interface for deleting entities
 type DeleteEntitiesTool struct {
@@ -32,19 +36,7 @@ func (t *DeleteEntitiesTool) Description() string {
 
 // Schema returns the JSON schema for the tool's parameters
 func (t *DeleteEntitiesTool) Schema() json.RawMessage {
-	return json.RawMessage(`{
-		"type": "object",
-		"properties": {
-			"entityNames": {
-				"type": "array",
-				"items": {
-					"type": "string"
-				},
-				"description": "An array of entity names to delete"
-			}
-		},
-		"required": ["entityNames"]
-	}`)
+	return deleteEntitiesSchemaJSON
 }
 
 // Execute deletes entities from the knowledge graph

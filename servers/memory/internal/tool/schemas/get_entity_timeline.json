@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "properties": {
+    "entity_id": {
+      "type": "string",
+      "description": "Required: The ID of the entity to retrieve the timeline for."
+    },
+    "start_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Optional: The start of the time range (RFC3339 format). If omitted, no lower time bound is applied."
+    },
+    "end_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Optional: The end of the time range (RFC3339 format). If omitted, no upper time bound is applied."
+    },
+    "type": {
+      "type": "string",
+      "description": "Optional: Filter observations by this specific type."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Optional: Filter observations that have ANY of these tags."
+    }
+  },
+  "required": [
+    "entity_id"
+  ]
+} 

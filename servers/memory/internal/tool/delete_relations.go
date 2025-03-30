@@ -1,6 +1,7 @@
 package tool
 
 import (
+	_ "embed" // Required for go:embed directive
 	"encoding/json"
 	"fmt"
 
@@ -8,6 +9,9 @@ import (
 	"mcp-memory/internal/graph"
 	"mcp-memory/internal/types"
 )
+
+//go:embed schemas/delete_relations.json
+var deleteRelationsSchemaJSON []byte // Use []byte for json.RawMessage
 
 // DeleteRelationsTool implements the Tool interface for deleting relations
 type DeleteRelationsTool struct {
@@ -33,34 +37,7 @@ func (t *DeleteRelationsTool) Description() string {
 
 // Schema returns the JSON schema for the tool's parameters
 func (t *DeleteRelationsTool) Schema() json.RawMessage {
-	return json.RawMessage(`{
-		"type": "object",
-		"properties": {
-			"relations": {
-				"type": "array",
-				"items": {
-					"type": "object",
-					"properties": {
-						"from": {
-							"type": "string",
-							"description": "The name of the entity where the relation starts"
-						},
-						"to": {
-							"type": "string",
-							"description": "The name of the entity where the relation ends"
-						},
-						"relationType": {
-							"type": "string",
-							"description": "The type of the relation"
-						}
-					},
-					"required": ["from", "to", "relationType"]
-				},
-				"description": "An array of relations to delete"
-			}
-		},
-		"required": ["relations"]
-	}`)
+	return deleteRelationsSchemaJSON
 }
 
 // Execute deletes relations from the knowledge graph

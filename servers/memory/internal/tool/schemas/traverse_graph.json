@@ -1,0 +1,82 @@
+{
+  "type": "object",
+  "description": "Traverses a graph based on specified parameters and filters.",
+  "properties": {
+    "start_node_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs of the nodes to start the traversal from."
+    },
+    "algorithm": {
+      "type": "string",
+      "enum": [
+        "BFS",
+        "DFS"
+      ],
+      "default": "BFS",
+      "description": "Traversal algorithm (BFS or DFS)."
+    },
+    "max_depth": {
+      "type": "integer",
+      "default": 10,
+      "description": "Maximum depth for the traversal."
+    },
+    "filters": {
+      "type": "object",
+      "description": "Filters to apply during traversal.",
+      "properties": {
+        "node_filter": {
+          "$ref": "#/$defs/NodeFilter"
+        },
+        "relation_filter": {
+          "$ref": "#/$defs/RelationFilter"
+        }
+      }
+    }
+  },
+  "required": [
+    "start_node_ids"
+  ],
+  "$defs": {
+    "FilterCondition": {
+      "type": "object",
+      "properties": {
+        "property": {
+          "type": "string",
+          "description": "Node/Relation property to filter on (e.g., 'type', 'name', 'metadata.key')."
+        },
+        "value": {
+          "description": "Value to match."
+        }
+      },
+      "required": [
+        "property",
+        "value"
+      ]
+    },
+    "NodeFilter": {
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FilterCondition"
+          }
+        }
+      }
+    },
+    "RelationFilter": {
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FilterCondition"
+          }
+        }
+      }
+    }
+  }
+}

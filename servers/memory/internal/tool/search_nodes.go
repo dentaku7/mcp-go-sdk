@@ -1,12 +1,16 @@
 package tool
 
 import (
+	_ "embed" // Required for go:embed directive
 	"encoding/json"
 	"fmt"
 
 	"mcp-go-sdk"
 	"mcp-memory/internal/graph"
 )
+
+//go:embed schemas/search_nodes.json
+var searchNodesSchemaJSON []byte // Use []byte for json.RawMessage
 
 // SearchNodesTool implements the Tool interface for searching nodes
 type SearchNodesTool struct {
@@ -32,18 +36,7 @@ func (t *SearchNodesTool) Description() string {
 
 // Schema returns the JSON schema for the tool's parameters
 func (t *SearchNodesTool) Schema() json.RawMessage {
-	return json.RawMessage(`{
-		"type": "object",
-		"properties": {
-			"type": {
-				"type": "string"
-			},
-			"metadata": {
-				"type": "object",
-				"additionalProperties": true
-			}
-		}
-	}`)
+	return searchNodesSchemaJSON
 }
 
 // Execute searches for entities based on type and metadata

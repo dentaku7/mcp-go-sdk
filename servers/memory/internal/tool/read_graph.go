@@ -1,11 +1,15 @@
 package tool
 
 import (
+	_ "embed" // Required for go:embed directive
 	"encoding/json"
 
 	"mcp-go-sdk"
 	"mcp-memory/internal/graph"
 )
+
+//go:embed schemas/read_graph.json
+var readGraphSchemaJSON []byte // Use []byte for json.RawMessage
 
 // ReadGraphTool implements the Tool interface for reading the entire graph
 type ReadGraphTool struct {
@@ -31,11 +35,7 @@ func (t *ReadGraphTool) Description() string {
 
 // Schema returns the JSON schema for the tool's parameters
 func (t *ReadGraphTool) Schema() json.RawMessage {
-	return json.RawMessage(`{
-		"type": "object",
-		"properties": {},
-		"additionalProperties": false
-	}`)
+	return readGraphSchemaJSON
 }
 
 // Execute returns the current state of the knowledge graph
