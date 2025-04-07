@@ -31,7 +31,7 @@ func (t *DeleteEntitiesTool) Name() string {
 
 // Description returns the description of the tool
 func (t *DeleteEntitiesTool) Description() string {
-	return "Deletes entities from the knowledge graph"
+	return "Deletes entities from the knowledge graph by their unique IDs"
 }
 
 // Schema returns the JSON schema for the tool's parameters
@@ -42,22 +42,22 @@ func (t *DeleteEntitiesTool) Schema() json.RawMessage {
 // Execute deletes entities from the knowledge graph
 func (t *DeleteEntitiesTool) Execute(params json.RawMessage) (interface{}, error) {
 	var input struct {
-		EntityNames []string `json:"entityNames"`
+		EntityIds []string `json:"entityIds"`
 	}
 
 	if err := json.Unmarshal(params, &input); err != nil {
 		return formatError(fmt.Errorf("failed to parse input: %w", err)), nil
 	}
 
-	if err := t.manager.DeleteEntities(input.EntityNames); err != nil {
+	if err := t.manager.DeleteEntities(input.EntityIds); err != nil {
 		return formatError(fmt.Errorf("failed to delete entities: %w", err)), nil
 	}
 
 	return formatResponse(
-		fmt.Sprintf("Successfully deleted %d entities", len(input.EntityNames)),
+		fmt.Sprintf("Successfully deleted %d entities", len(input.EntityIds)),
 		map[string]interface{}{
-			"deleted_count": len(input.EntityNames),
-			"deleted_ids":   input.EntityNames,
+			"deleted_count": len(input.EntityIds),
+			"deleted_ids":   input.EntityIds,
 		},
 		nil,
 	), nil

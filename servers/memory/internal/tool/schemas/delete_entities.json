@@ -1,13 +1,13 @@
 {
 	"type": "object",
 	"properties": {
-		"entityNames": {
+		"entityIds": {
 			"type": "array",
 			"items": {
 				"type": "string"
 			},
-			"description": "An array of entity names to delete"
+			"description": "An array of entity IDs to delete from the knowledge graph"
 		}
 	},
-	"required": ["entityNames"]
+	"required": ["entityIds"]
 }
