@@ -70,8 +70,14 @@ func (s *MCPServer) Start() error {
 					// Client connection lost, exit gracefully
 					return fmt.Errorf("client connection lost: %v", err)
 				}
-				// Log other errors but continue processing
+				// For invalid JSON or other parsing errors, log and continue
+				if _, ok := err.(*json.SyntaxError); ok {
+					fmt.Fprintf(os.Stderr, "Invalid JSON received: %v\n", err)
+					continue
+				}
+				// For other errors, log and continue
 				fmt.Fprintf(os.Stderr, "Error handling message: %v\n", err)
+				continue
 			}
 		}
 	}
@@ -87,8 +93,9 @@ func (s *MCPServer) handleNextMessage() error {
 	// Parse the request
 	var req mcp.Request
 	if err := json.Unmarshal(msg, &req); err != nil {
+		// Send parse error response
 		s.sendError(nil, ErrParseError, "Parse error", err.Error())
-		return nil
+		return err // Return the error to be handled by Start()
 	}
 
 	// Handle the request

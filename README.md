@@ -8,16 +8,6 @@ A Go SDK for building Model Communication Protocol (MCP) tools and servers. This
 go get github.com/dentaku7/mcp-go-sdk
 ```
 
-## Example Servers
-
-This repository includes several example servers in the `servers/` directory:
-
-- `servers/example`: A minimal echo server demonstrating basic usage
-- `servers/duckdb`: DuckDB integration example
-- `servers/groq`: Groq API integration
-- `servers/memory`: In-memory graph database implementation
-- `servers/sequentialthinking`: Sequential thinking implementation
-
 ## Quick Start
 
 Here's a minimal example of creating an MCP tool that echoes back messages:
