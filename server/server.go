@@ -56,6 +56,11 @@ func (s *MCPServer) Start() error {
 	s.running.Add(1)
 	defer s.running.Done()
 
+	// Circuit breaker for error handling
+	consecutiveErrors := 0
+	maxConsecutiveErrors := 10 // Exit after 10 consecutive errors
+	var lastErrMsg string
+
 	for {
 		select {
 		case <-s.done:
@@ -70,14 +75,32 @@ func (s *MCPServer) Start() error {
 					// Client connection lost, exit gracefully
 					return fmt.Errorf("client connection lost: %v", err)
 				}
-				// For invalid JSON or other parsing errors, log and continue
+
+				// Handle JSON syntax errors and other errors
+				errMsg := err.Error()
 				if _, ok := err.(*json.SyntaxError); ok {
 					fmt.Fprintf(os.Stderr, "Invalid JSON received: %v\n", err)
-					continue
+				} else {
+					fmt.Fprintf(os.Stderr, "Error handling message: %v\n", err)
 				}
-				// For other errors, log and continue
-				fmt.Fprintf(os.Stderr, "Error handling message: %v\n", err)
+
+				// Circuit breaker - check if we're getting the same error repeatedly
+				if errMsg == lastErrMsg {
+					consecutiveErrors++
+					if consecutiveErrors >= maxConsecutiveErrors {
+						return fmt.Errorf("circuit breaker triggered after %d consecutive identical errors: %v", consecutiveErrors, err)
+					}
+				} else {
+					// Different error, reset counter
+					consecutiveErrors = 1
+					lastErrMsg = errMsg
+				}
+
 				continue
+			} else {
+				// Success - reset error counter
+				consecutiveErrors = 0
+				lastErrMsg = ""
 			}
 		}
 	}
